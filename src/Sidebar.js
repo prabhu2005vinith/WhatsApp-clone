@@ -8,9 +8,11 @@ import DonutLargeIcon from "@material-ui/icons/DonutLarge";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
+import { useStateValue } from "./StateProvider";
 
 function Sidebar() {
     const [rooms, setRooms] = useState([]);
+    const [{ user }, dispatch] = useStateValue();
 
     useEffect(() => {
         db.collection("rooms").onSnapshot((snapshot) => {
@@ -26,7 +28,7 @@ function Sidebar() {
     return (
         <div className="sidebar">
             <div className="sidebar__header">
-                <Avatar src="https://lh3.googleusercontent.com/ogw/ADGmqu-O3FPCOrd0CoblzY6TWNXjFVxABPDDzwE37tNi=s83-c-mo" />
+                <Avatar src={user?.photoURL} />
                 <div className="sidebar__icons">
                     <IconButton>
                         <DonutLargeIcon />
