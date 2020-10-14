@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import db from "./firebase";
 import "./SidebarChat.css";
 import Avatar from "@material-ui/core/Avatar";
+import { Link } from "react-router-dom";
 
-function SidebarChat({ addNewChat }) {
+function SidebarChat({ id, name, addNewChat }) {
     const [seed, setSeed] = useState("");
 
     useEffect(() => {
@@ -10,23 +12,34 @@ function SidebarChat({ addNewChat }) {
     }, []);
 
     const createChat = () => {
-        const roomName= prompt("Please enter the name of the new room you want to create");
+        const roomName = prompt(
+            "Please enter the name of the new room you want to create"
+        );
 
-        if(roomName){
+        if (roomName) {
             //Firebase
+            const unsubscribe = db.collection("rooms").add({
+                name: roomName,
+            });
+
+            return () => {
+                unsubscribe();
+            };
         }
     };
 
     return !addNewChat ? (
-        <div className="sidebarChat">
-            <Avatar
-                src={`https://avatars.dicebear.com/api/human/${seed}.svg`}
-            />
-            <div className="sidebarChat__info">
-                <h2>Room name</h2>
-                <p>Last message...</p>
+        <Link to={`/rooms/${id}`}>
+            <div className="sidebarChat">
+                <Avatar
+                    src={`https://avatars.dicebear.com/api/human/${seed}.svg`}
+                />
+                <div className="sidebarChat__info">
+                    <h2>{name}</h2>
+                    <p>Last message...</p>
+                </div>
             </div>
-        </div>
+        </Link>
     ) : (
         <div onClick={createChat} className="sidebarChat">
             <h2>Add new Chat</h2>
